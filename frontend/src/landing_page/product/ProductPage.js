@@ -28,7 +28,7 @@ function ProductPage() {
         appStore=""
       />
       <LeftSection
-        imageURL="media/versity-products.png"
+        imageURL="media\varsity-products.svg"
         productName="Versity mobile"
         productDescription="An easy to grasp, collection of stock market lessons with in-depth coverage and illustrations. Content is broken down into bite-size cards to help you learn on the go."
         tryDemo=""
