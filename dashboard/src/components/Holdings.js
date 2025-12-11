@@ -1,5 +1,7 @@
 import React,{ useState, useEffect, useRef } from "react";
-import axios, { all } from "axios";
+// import axios, { all } from "axios";
+import axios from "axios";
+
 import { VerticalGraph } from "./VerticalGraph";
 
 // import { holdings } from "../data/data";

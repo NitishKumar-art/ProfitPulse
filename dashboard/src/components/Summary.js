@@ -1,6 +1,6 @@
 import React from "react";
 
-const Summary = () => {
+function Summary() {
   return (
     <>
       <div className="username">

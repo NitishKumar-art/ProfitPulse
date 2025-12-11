@@ -1,6 +1,6 @@
 import React,{ useState, useEffect, useRef} from "react";
 
-import Dashboard from "./Dashboard";
+import Dashboard from "./dashboard";
 import TopBar from "./TopBar";
 
 const Home = () => {
