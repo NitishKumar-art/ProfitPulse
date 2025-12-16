@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
-
+import api from "../../api/axios"; // ✅ shared axios instance
 
 function Signup() {
   const [newUser, setNewUser] = useState({
@@ -20,39 +18,33 @@ function Signup() {
     }));
   };
 
-  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await axios.post(
-      "http://localhost:3003/signup",
-      newUser
-    );
+    try {
+      // 1️⃣ Signup
+      const res = await api.post("/signup", newUser);
+      toast.success(res.data.message || "Signup successful");
 
-    toast.success(res.data.message);
-
-    //  Auto-login after signup (OPTIONAL BUT RECOMMENDED)
-    const loginRes = await axios.post(
-      "http://localhost:3003/login",
-      {
+      // 2️⃣ Auto-login
+      const loginRes = await api.post("/login", {
         email: newUser.email,
         password: newUser.password,
-      }
-    );
+      });
 
-    // Save token
-    localStorage.setItem("token", loginRes.data.token);
-    localStorage.setItem("user", JSON.stringify(loginRes.data.user));
+      // 3️⃣ Store auth data
+      localStorage.setItem("token", loginRes.data.token);
+      localStorage.setItem("user", JSON.stringify(loginRes.data.user));
 
-    // Redirect to dashboard
-    navigate("/dashboard");
+      // 4️⃣ Redirect to Dashboard (separate Vercel app)
+      window.location.href = "https://your-dashboard-name.vercel.app";
 
-  } catch (err) {
-    toast.error(err.response?.data?.message || "Signup failed");
-  }
-};
-
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message || "Signup failed. Please try again."
+      );
+    }
+  };
 
   return (
     <div className="container" style={{ marginTop: "20vh" }}>
@@ -72,7 +64,7 @@ const handleSubmit = async (e) => {
         <div className="col-6 text-center">
           <img
             src="media/signup.svg"
-            alt="console"
+            alt="signup"
             className="img-fluid"
             style={{ width: "98%" }}
           />
@@ -90,6 +82,7 @@ const handleSubmit = async (e) => {
                 id="fullName"
                 value={newUser.fullName}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -101,6 +94,7 @@ const handleSubmit = async (e) => {
                 id="email"
                 value={newUser.email}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -112,6 +106,7 @@ const handleSubmit = async (e) => {
                 id="password"
                 value={newUser.password}
                 onChange={handleChange}
+                required
               />
             </div>
 

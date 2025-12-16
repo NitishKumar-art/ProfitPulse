@@ -1,5 +1,9 @@
 import axios from "axios";
 
-export default axios.create({
-  baseURL: "https://profitpulse-0wgc.onrender.com",
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL,
+  withCredentials: true
 });
+
+export default api;
+
