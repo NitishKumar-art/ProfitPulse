@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios"; // Adjust path to your api.js
 
 function Login() {
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false); // Loading state
 
   const navigate = useNavigate();
 
@@ -18,27 +19,25 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      const res = await axios.post(
-        "http://localhost:3003/login",
-        userInfo
-      );
+      const res = await api.post("/login", userInfo); // Using centralized api
 
-      // ✅ Save JWT token
+      // Save JWT token
       localStorage.setItem("token", res.data.token);
 
       toast.success(res.data.message);
 
-      // ✅ Redirect to dashboard
+      // Redirect to dashboard after short delay
       setTimeout(() => {
         navigate("/dashboard");
       }, 1500);
 
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Login failed"
-      );
+      toast.error(error.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,8 +74,8 @@ function Login() {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary">
-            Login
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
       </div>
