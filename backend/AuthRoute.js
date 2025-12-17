@@ -1,11 +1,15 @@
-const { Signup } = require("backend/controllers/AuthController.js");
-const {Login} = require("backend/controllers/LoginController.js")
-const router = require("express").Router();
-const {userVerification} = require("backend/middlewares/AuthMiddleware.js");
+const express = require("express");
+const router = express.Router();
 
-router.post("/user",userVerification);
+const { Signup } = require("./controllers/AuthController");
+const { Login } = require("./controllers/LoginController");
+const { userVerification } = require("./middlewares/AuthMiddleware");
+
+// verify user (protected)
+router.post("/user", userVerification);
+
+// auth routes
 router.post("/signup", Signup);
-router.post("/login",Login);
-
+router.post("/login", Login);
 
 module.exports = router;

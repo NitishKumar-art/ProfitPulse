@@ -1,20 +1,18 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import api from "../api/axios"; // Adjust path to your api.js
+import api from "../api/axios";
 
 function Login() {
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
   });
-  const [loading, setLoading] = useState(false); // Loading state
 
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserInfo({ ...userInfo, [name]: value });
+    setUserInfo((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -22,17 +20,16 @@ function Login() {
     setLoading(true);
 
     try {
-      const res = await api.post("/login", userInfo); // Using centralized api
+      const res = await api.post("/login", userInfo);
 
-      // Save JWT token
+      // store auth data
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      toast.success(res.data.message);
+      toast.success(res.data.message || "Login successful");
 
-      // Redirect to dashboard after short delay
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1500);
+      // redirect to dashboard (different Vercel app)
+      window.location.href = "https://profitpulsedashboard.vercel.app/";
 
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed");
@@ -42,43 +39,32 @@ function Login() {
   };
 
   return (
-    <div
-      className="container d-flex justify-content-center align-items-center"
-      style={{ marginTop: "20vh" }}
-    >
-      <div className="col-12 col-md-6">
-        <h1 className="mb-4">Login</h1>
+    <div className="container" style={{ marginTop: "20vh" }}>
+      <h1>Login</h1>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Email address</label>
-            <input
-              type="email"
-              className="form-control"
-              name="email"
-              value={userInfo.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          name="email"
+          value={userInfo.email}
+          onChange={handleChange}
+          placeholder="Email"
+          required
+        />
 
-          <div className="mb-3">
-            <label className="form-label">Password</label>
-            <input
-              type="password"
-              className="form-control"
-              name="password"
-              value={userInfo.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
+        <input
+          type="password"
+          name="password"
+          value={userInfo.password}
+          onChange={handleChange}
+          placeholder="Password"
+          required
+        />
 
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
-      </div>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
+      </form>
     </div>
   );
 }

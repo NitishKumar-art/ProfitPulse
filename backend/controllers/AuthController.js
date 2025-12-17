@@ -1,4 +1,5 @@
-const UsersModel = require("backend/model/UsersModel.js");
+const UsersModel = require("../model/UsersModel");
+
 const { createSecretToken } = require("backend/SecreteToken.js");
 
 

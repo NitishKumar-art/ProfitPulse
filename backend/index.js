@@ -8,6 +8,11 @@ const { HoldingsModel } = require("./model/HoldingsModel");
 const { PositionsModel } = require("./model/PositionsModel");
 const { OrdersModel } = require("./model/OrdersModel");
 
+const authRoutes = require("./AuthRoute");
+
+app.use("/api", authRoutes);
+
+
 const app = express();
 
 // ===== CONFIG =====
@@ -22,8 +27,8 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://localhost:5173",
-      "https://your-frontend.netlify.app",
-      "https://your-dashboard.netlify.app",
+      "https://profitpulse-alpha.vercel.app/",
+      "https:https://profitpulsedashboard.vercel.app/signup.js",
     ],
     credentials: true,
   })
@@ -63,6 +68,11 @@ mongoose
   .connect(MONGO_URI)
   .then(() => {
     console.log("MongoDB connected");
+
+    const authRoutes = require("./AuthRoute");
+
+      app.use("/api", authRoutes);
+
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
